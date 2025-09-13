@@ -1,7 +1,11 @@
 package me.markminisce.app.basicdatastructures;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 import lombok.Getter;
 
@@ -12,6 +16,8 @@ import lombok.Getter;
 public class Graph<T> {
     @Getter
     private ArrayList<LinkedList<GraphNode<T>>> vertices;
+    
+    private Set<String> vertexIds; 
 
     @Getter
     private int[] outdegree;
@@ -23,6 +29,7 @@ public class Graph<T> {
     private void initGraph(int capacity) {
         vertices = new ArrayList<LinkedList<GraphNode<T>>>();
         this.outdegree = new int[capacity];
+        this.vertexIds = new HashSet<>();
     }
 
     public void addEdge(GraphNode<T> origin, GraphNode<T> destination) {
@@ -30,22 +37,27 @@ public class Graph<T> {
             throw new IllegalArgumentException("Source cannot equal destination. Loops are not supported!");
         }
 
-        addVertex(origin);
-        addVertex(destination);
+        addEdge(origin);
+        
+        if (destination != null) {
+            addEdge(destination);
 
-        LinkedList<GraphNode<T>> currentVertexEdges; 
+            LinkedList<GraphNode<T>> currentVertexEdges; 
 
-        for(int i = 0; i < vertices.size(); i++) {
-            currentVertexEdges = vertices.get(i); 
-            if (currentVertexEdges.peekFirst().equals(origin)) {
-                currentVertexEdges.addLast(destination);
-                outdegree[i]++;
-                return;
+            for(int i = 0; i < vertices.size(); i++) {
+                currentVertexEdges = vertices.get(i); 
+                if (currentVertexEdges.peekFirst().equals(origin)) {
+                    currentVertexEdges.addLast(destination);
+                    outdegree[i]++;
+                    return;
+                }
             }
         }
+
+        vertexIds.addAll(Arrays.asList(origin.getId(), destination.getId())); 
     }
 
-    private void addVertex(GraphNode<T> vertex) {
+    public void addEdge(GraphNode<T> vertex) {
         for(int i = 0; i < this.vertices.size(); i++){
             if (vertex.equals(this.vertices.get(i).peekFirst())) {
                 return;
@@ -55,10 +67,11 @@ public class Graph<T> {
         vertices.add(new LinkedList<GraphNode<T>>());
         LinkedList<GraphNode<T>> newOriginEdges = vertices.get(vertices.size() - 1); 
         newOriginEdges.addLast(vertex);
+        vertexIds.add(vertex.getId()); 
     }
 
     public int getVertexCount() {
-        return vertices.size();
+        return vertexIds.size();
     }
 
     public String toString() {

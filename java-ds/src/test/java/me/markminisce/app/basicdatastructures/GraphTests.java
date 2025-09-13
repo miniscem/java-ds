@@ -1,7 +1,6 @@
 package me.markminisce.app.basicdatastructures;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,7 +31,7 @@ public class GraphTests {
     }
 
     private Graph<Integer> getComplexGraph() {
-        Graph<Integer> complexGraph = new Graph(10); 
+        Graph<Integer> complexGraph = new Graph<>(10); 
         GraphNode<Integer> n1 = new GraphNode<>(10);
         GraphNode<Integer> n2 = new GraphNode<>(20);
         GraphNode<Integer> n3 = new GraphNode<>(30);
