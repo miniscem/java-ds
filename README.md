@@ -16,10 +16,13 @@ I'm doing this as a side project to deepen my understanding of data structures, 
 - Practice writing clean, idiomatic Java
 - Explore edge cases and real-world usage
 
+
 ## How It's Organized
 
-- `src/main/java/me/markminisce/app/basicdatastructures/` — All the data structure implementations
-- `src/test/java/me/markminisce/app/basicdatastructures/` — JUnit tests for each structure
+- `src/main/java/me/markminisce/app/basicdatastructures/` — Data structure implementations (e.g., Graph, PriorityQueue, etc.)
+- `src/main/java/me/markminisce/app/basicalgorithms/` — Algorithm implementations (e.g., Prim's MST)
+- `src/test/java/me/markminisce/app/basicdatastructures/` — JUnit tests for data structures
+- `src/test/java/me/markminisce/app/basicalgorithms/` — JUnit tests for algorithms
 - `pom.xml` — Maven build file
 
 ## Getting Started
