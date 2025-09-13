@@ -2,7 +2,6 @@ package me.markminisce.app.basicdatastructures;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -37,10 +36,10 @@ public class Graph<T> {
             throw new IllegalArgumentException("Source cannot equal destination. Loops are not supported!");
         }
 
-        addEdge(origin);
+        addVertex(origin);
         
         if (destination != null) {
-            addEdge(destination);
+            addVertex(destination);
 
             LinkedList<GraphNode<T>> currentVertexEdges; 
 
@@ -57,7 +56,7 @@ public class Graph<T> {
         vertexIds.addAll(Arrays.asList(origin.getId(), destination.getId())); 
     }
 
-    public void addEdge(GraphNode<T> vertex) {
+    public void addVertex(GraphNode<T> vertex) {
         for(int i = 0; i < this.vertices.size(); i++){
             if (vertex.equals(this.vertices.get(i).peekFirst())) {
                 return;

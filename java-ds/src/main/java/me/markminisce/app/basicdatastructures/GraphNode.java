@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class GraphNode<T> implements Identifiable {
     private T value;
-    private int weight;
-    private String id; 
+    private final int weight;
+    private final String id; 
 
     public GraphNode(String id) {
         this.id = id;

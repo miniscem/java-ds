@@ -15,7 +15,7 @@ public class PrimMST<T> {
 
     private Graph<T> graph;
     private Map<GraphNode<T>, Integer> distances;
-    private Map<GraphNode<T>, GraphNode<T>> destinationToOrigin;
+    private Map<GraphNode<T>, GraphNode<T>> destinationToParent;
     private Set<String> nodesInMst; 
     private Graph<T> mst;
 
@@ -23,7 +23,7 @@ public class PrimMST<T> {
     public PrimMST(Graph<T> graph) {
         this.graph = graph;
         this.distances = new HashMap<GraphNode<T>, Integer>();
-        this.destinationToOrigin = new HashMap<GraphNode<T>, GraphNode<T>>();
+        this.destinationToParent = new HashMap<GraphNode<T>, GraphNode<T>>();
         this.nodesInMst = new HashSet<>();
 
         this.mst = new Graph<>(graph.getVertexCount()); 
@@ -38,7 +38,7 @@ public class PrimMST<T> {
         LinkedList<GraphNode<T>> currentVertexEdges = this.graph.getVertices().get(0);
         
         //start by adding the first vertex
-        mst.addEdge(currentVertexEdges.getFirst()); 
+        mst.addVertex(currentVertexEdges.getFirst()); 
         nodesInMst.add(currentVertexEdges.getFirst().getId());
 
         int overallMinDistance = Integer.MAX_VALUE;
@@ -53,7 +53,7 @@ public class PrimMST<T> {
                 int discoveredDistance = n.getWeight();
                 if (!n.equals(currentVertexEdges.getFirst()) && !inMst && discoveredDistance < currentKnownDistance) {
                     this.distances.put(n, n.getWeight()); 
-                    this.destinationToOrigin.put(n, currentVertexEdges.getFirst());
+                    this.destinationToParent.put(n, currentVertexEdges.getFirst());
                 }
             }
 
@@ -63,7 +63,7 @@ public class PrimMST<T> {
             GraphNode<T> bestOrigin = null;
             for(Map.Entry<GraphNode<T>, Integer> distanceToVertex : this.distances.entrySet()) {
                 if (!isInMst(distanceToVertex.getKey()) && distanceToVertex.getValue() < overallMinDistance) {
-                    bestOrigin = destinationToOrigin.get(distanceToVertex.getKey());
+                    bestOrigin = destinationToParent.get(distanceToVertex.getKey());
                     bestDestination = distanceToVertex.getKey(); 
                     overallMinDistance = distanceToVertex.getValue();
                 }
