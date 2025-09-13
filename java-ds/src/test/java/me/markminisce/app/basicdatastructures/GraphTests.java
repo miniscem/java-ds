@@ -2,6 +2,7 @@ package me.markminisce.app.basicdatastructures;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -55,18 +56,31 @@ public class GraphTests {
         Graph<Integer> testGraph = getComplexGraph();
         assertEquals(5, testGraph.getVertexCount()); 
 
-        ArrayList<LinkedList<GraphNode<Integer>>> vertices = testGraph.getVertices(); 
+        Map<GraphNode<Integer>, LinkedList<GraphNode<Integer>>> vertices = testGraph.getVertices(); 
 
-        assertTrue(areVertexesExpected(vertices.get(0), 
-            IntStream.of(10, 30, 20).boxed().collect(Collectors.toSet())));
+        //find vertex node to check
+        GraphNode<Integer> vertex10 = 
+            vertices.entrySet().stream().map(vertexAndEdges -> vertexAndEdges.getKey())
+                .filter(vertex -> vertex.getId().equals("10")).findFirst().get(); 
 
-        assertTrue(areVertexesExpected(vertices.get(2), 
-            IntStream.of(  20, 40, 10).boxed().collect(Collectors.toSet())));
+        assertTrue(areVertexesExpected(testGraph.getVertices().get(vertex10), 
+            IntStream.of(30, 20).boxed().collect(Collectors.toSet())));
 
-        assertTrue(areVertexesExpected(vertices.get(1), 
-            IntStream.of(  30, 10, 20, 50).boxed().collect(Collectors.toSet())));
+        GraphNode<Integer> vertex20 = 
+            vertices.entrySet().stream().map(vertexAndEdges -> vertexAndEdges.getKey())
+                .filter(vertex -> vertex.getId().equals("20")).findFirst().get(); 
+
+        assertTrue(areVertexesExpected(testGraph.getVertices().get(vertex20), 
+            IntStream.of(40, 10).boxed().collect(Collectors.toSet())));        
             
-        assertEquals(1, vertices.get(3).size());
+        GraphNode<Integer> vertex30 = 
+            vertices.entrySet().stream().map(vertexAndEdges -> vertexAndEdges.getKey())
+                .filter(vertex -> vertex.getId().equals("30")).findFirst().get(); 
+
+        assertTrue(areVertexesExpected(testGraph.getVertices().get(vertex30), 
+            IntStream.of(10, 20, 50).boxed().collect(Collectors.toSet())));               
+            
+        assertEquals(5, vertices.entrySet().size());
         
     }
 

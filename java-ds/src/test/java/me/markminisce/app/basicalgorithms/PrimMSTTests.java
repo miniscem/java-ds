@@ -32,48 +32,55 @@ public class PrimMSTTests {
         testObj = new PrimMST<>(basicGraph);
         Graph<Integer> result = testObj.getMST(); 
 
-        //verify connections to Node{value: 1, weight: 2}
-        LinkedList<GraphNode<Integer>> n12Edges = result.getVertices().stream()
-            .filter(edge -> edge.getFirst().getId().equals("1") 
-                        && edge.getFirst().getWeight() == 2).findFirst().get(); 
+        //verify connections to Node{value: 1, weight: 2}\
+        GraphNode<Integer> vertex12 = 
+            result.getVertices().entrySet().stream().map(vertexAndEdges -> vertexAndEdges.getKey())
+                .filter(vertex -> vertex.getId().equals("1") && vertex.getWeight() == 2).findFirst().get(); 
+
+        LinkedList<GraphNode<Integer>> n12Edges = result.getVertices().get(vertex12);
         
         //implementation will always store the vertex edge at the first node in the edge list.
-        assertEquals(2, n12Edges.subList(1, n12Edges.size()).size());
-        GraphNode<Integer> n12FirstEdge = n12Edges.get(1);
+        assertEquals(2, n12Edges.size());
+        GraphNode<Integer> n12FirstEdge = n12Edges.get(0);
         assertEquals("3", n12FirstEdge.getId());
         assertEquals(2, n12FirstEdge.getWeight());
 
-        GraphNode<Integer> n12SecondEdge = n12Edges.get(2);
+        GraphNode<Integer> n12SecondEdge = n12Edges.get(1);
         assertEquals("2", n12SecondEdge.getId());
         assertEquals(5, n12SecondEdge.getWeight());
 
 
         //verify connections to Node{value: 2, weight: 5}
-        LinkedList<GraphNode<Integer>> n25Edges = result.getVertices().stream()
-            .filter(edge -> edge.getFirst().getId().equals("2") 
-                        && edge.getFirst().getWeight() == 5).findFirst().get(); 
+        GraphNode<Integer> vertex25 = 
+            result.getVertices().entrySet().stream().map(vertexAndEdges -> vertexAndEdges.getKey())
+                .filter(vertex -> vertex.getId().equals("2") && vertex.getWeight() == 5).findFirst().get(); 
+
+        LinkedList<GraphNode<Integer>> n25Edges = result.getVertices().get(vertex25);
         
-        assertEquals(1, n25Edges.subList(1, n25Edges.size()).size());
-        GraphNode<Integer> n25FirstEdge = n25Edges.get(1);
+        assertEquals(1, n25Edges.size());
+        GraphNode<Integer> n25FirstEdge = n25Edges.get(0);
         assertEquals("4", n25FirstEdge.getId());
         assertEquals(1, n25FirstEdge.getWeight());       
 
         //verify connections to Node{value: 4, weight: 1}
-        LinkedList<GraphNode<Integer>> n41Edges = result.getVertices().stream()
-            .filter(edge -> edge.getFirst().getId().equals("4") 
-                        && edge.getFirst().getWeight() == 1).findFirst().get();         
+        GraphNode<Integer> vertex41 = 
+            result.getVertices().entrySet().stream().map(vertexAndEdges -> vertexAndEdges.getKey())
+                .filter(vertex -> vertex.getId().equals("4") && vertex.getWeight() == 1).findFirst().get(); 
+
+        LinkedList<GraphNode<Integer>> n41Edges = result.getVertices().get(vertex41);      
         
         //node doesn't have any edges, outDegree == 0
-        assertEquals(1, n41Edges.size());
+        assertEquals(0, n41Edges.size());
 
                 //verify connections to Node{value: 3, weight: 2}
-        LinkedList<GraphNode<Integer>> n32Edges = result.getVertices().stream()
-            .filter(edge -> edge.getFirst().getId().equals("3") 
-                        && edge.getFirst().getWeight() == 2).findFirst().get();         
+        GraphNode<Integer> vertex32 = 
+            result.getVertices().entrySet().stream().map(vertexAndEdges -> vertexAndEdges.getKey())
+                .filter(vertex -> vertex.getId().equals("3") && vertex.getWeight() == 2).findFirst().get(); 
+
+        LinkedList<GraphNode<Integer>> n32Edges = result.getVertices().get(vertex32);      
         
         //node doesn't have any edges, outDegree == 0
-        assertEquals(1, n32Edges.size());
-
+        assertEquals(0, n32Edges.size());
     }
 
     private Graph<Integer> getBasicGraphForMst() {

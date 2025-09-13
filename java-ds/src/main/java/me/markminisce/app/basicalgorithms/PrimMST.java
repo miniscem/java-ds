@@ -28,18 +28,19 @@ public class PrimMST<T> {
 
         this.mst = new Graph<>(graph.getVertexCount()); 
         
-        for (LinkedList<GraphNode<T>> vertex : graph.getVertices()) {           
-            this.distances.put(vertex.getFirst(), Integer.MAX_VALUE); 
-        }
+        graph.getVertices().entrySet().stream()
+            .map(vertexAndEdges -> vertexAndEdges.getKey())
+            .forEach(vertex -> this.distances.put(vertex, Integer.MAX_VALUE));
     }
 
     public Graph<T> getMST() {
         //start with arbitrary node, in our case, always start with first node.
-        LinkedList<GraphNode<T>> currentVertexEdges = this.graph.getVertices().get(0);
+        Map.Entry<GraphNode<T>, LinkedList<GraphNode<T>>> currentVertexAndEdges = 
+            this.graph.getVertices().entrySet().stream().findFirst().get();
         
         //start by adding the first vertex
-        mst.addVertex(currentVertexEdges.getFirst()); 
-        nodesInMst.add(currentVertexEdges.getFirst().getId());
+        mst.addVertex(currentVertexAndEdges.getKey()); 
+        nodesInMst.add(currentVertexAndEdges.getKey().getId());
 
         int overallMinDistance = Integer.MAX_VALUE;
 
@@ -47,13 +48,13 @@ public class PrimMST<T> {
         while(mst.getVertexCount() < this.graph.getVertexCount()) {
 
             //update known distances to all nodes based on what we've seen thus far
-            for (GraphNode<T> n : currentVertexEdges){
+            for (GraphNode<T> n : currentVertexAndEdges.getValue()){
                 boolean inMst = isInMst(n);
                 int currentKnownDistance = distances.get(n);
                 int discoveredDistance = n.getWeight();
-                if (!n.equals(currentVertexEdges.getFirst()) && !inMst && discoveredDistance < currentKnownDistance) {
+                if (!n.equals(currentVertexAndEdges.getKey()) && !inMst && discoveredDistance < currentKnownDistance) {
                     this.distances.put(n, n.getWeight()); 
-                    this.destinationToParent.put(n, currentVertexEdges.getFirst());
+                    this.destinationToParent.put(n, currentVertexAndEdges.getKey());
                 }
             }
 
@@ -71,7 +72,7 @@ public class PrimMST<T> {
 
             this.mst.addEdge(bestOrigin, bestDestination);
             this.nodesInMst.add(bestDestination.getId()); 
-            currentVertexEdges = getEdges(bestDestination);
+            currentVertexAndEdges = getEdges(bestDestination);
         }
 
         return mst;
@@ -81,8 +82,10 @@ public class PrimMST<T> {
         return this.nodesInMst.contains(node.getId());
     }
 
-    private LinkedList<GraphNode<T>> getEdges(GraphNode<T> vertex) {
-        return this.graph.getVertices().stream().filter(nodeEdges -> nodeEdges.getFirst().equals(vertex)).findFirst().get();
+    private Map.Entry<GraphNode<T>, LinkedList<GraphNode<T>>> getEdges(GraphNode<T> vertex) {
+        return this.graph.getVertices().entrySet().stream()
+            .filter(vertexAndEdges -> vertexAndEdges.getKey().equals(vertex))
+            .findFirst()
+            .get();
     }
-
 }

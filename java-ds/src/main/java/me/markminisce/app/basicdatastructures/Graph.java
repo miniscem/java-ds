@@ -1,33 +1,31 @@
 package me.markminisce.app.basicdatastructures;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 
 import lombok.Getter;
 
 //Graph implemented as an adjacency matrix
-//TODO
-//1. Examine the contract and basic operations of a graph
-//2. Implement weighted 
 public class Graph<T> {
     @Getter
-    private ArrayList<LinkedList<GraphNode<T>>> vertices;
+    private Map<GraphNode<T>, LinkedList<GraphNode<T>>> vertices;
     
     private Set<String> vertexIds; 
 
     @Getter
-    private int[] outdegree;
+    private Map<String, Integer> outdegree;
     
     public Graph(int capacity) {
         initGraph(capacity); 
     }
 
     private void initGraph(int capacity) {
-        vertices = new ArrayList<LinkedList<GraphNode<T>>>();
-        this.outdegree = new int[capacity];
+        vertices = new HashMap<GraphNode<T>, LinkedList<GraphNode<T>>>();
+        this.outdegree = new HashMap<String, Integer>();
         this.vertexIds = new HashSet<>();
     }
 
@@ -41,31 +39,19 @@ public class Graph<T> {
         if (destination != null) {
             addVertex(destination);
 
-            LinkedList<GraphNode<T>> currentVertexEdges; 
-
-            for(int i = 0; i < vertices.size(); i++) {
-                currentVertexEdges = vertices.get(i); 
-                if (currentVertexEdges.peekFirst().equals(origin)) {
-                    currentVertexEdges.addLast(destination);
-                    outdegree[i]++;
-                    return;
-                }
-            }
+            LinkedList<GraphNode<T>> currentVertexEdges = this.vertices.get(origin); 
+            currentVertexEdges.addLast(destination);
+            outdegree.put(origin.getId(), outdegree.getOrDefault(origin.getId() + 1, 1)); 
         }
 
         vertexIds.addAll(Arrays.asList(origin.getId(), destination.getId())); 
     }
 
     public void addVertex(GraphNode<T> vertex) {
-        for(int i = 0; i < this.vertices.size(); i++){
-            if (vertex.equals(this.vertices.get(i).peekFirst())) {
-                return;
-            }
+        if (!this.vertices.containsKey(vertex)) {
+            this.vertices.put(vertex, new LinkedList<GraphNode<T>>()); 
         }
         
-        vertices.add(new LinkedList<GraphNode<T>>());
-        LinkedList<GraphNode<T>> newOriginEdges = vertices.get(vertices.size() - 1); 
-        newOriginEdges.addLast(vertex);
         vertexIds.add(vertex.getId()); 
     }
 
@@ -76,16 +62,20 @@ public class Graph<T> {
     public String toString() {
         StringBuilder sb = new StringBuilder(); 
         LinkedList<GraphNode<T>> currentEdges;
+        GraphNode<T> currentVertex; 
 
-        for (int i = 0; i < this.vertices.size(); i++) {
-            currentEdges = vertices.get(i);
+
+        for (Map.Entry<GraphNode<T>, LinkedList<GraphNode<T>>> vertexAndEdges : vertices.entrySet()) {            
+            currentVertex = vertexAndEdges.getKey();
+            currentEdges = vertexAndEdges.getValue();
+
+            sb.append(String.format("%s[%d] -->", currentVertex.getValue(), currentVertex.getWeight()));
 
             currentEdges.stream()
                 .forEach((node) -> {
                         sb.append(String.format("%s[%d] -->", node.getValue(), node.getWeight()));
                 });
-
-            sb.append("NULL");
+                
             sb.append("\n");
         }
 
