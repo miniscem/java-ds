@@ -1,6 +1,5 @@
 package me.markminisce.app.basicdatastructures;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
